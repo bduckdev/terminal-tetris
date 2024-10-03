@@ -1,6 +1,9 @@
 package main
 
-import tea "github.com/charmbracelet/bubbletea"
+import (
+	"github.com/charmbracelet/bubbles/key"
+	tea "github.com/charmbracelet/bubbletea"
+)
 
 type model struct {
 	playfield [10][20]byte
@@ -20,7 +23,15 @@ func (m model) Init() tea.Cmd {
 	return nil
 }
 
-func (m model) Update(tea.Msg) (tea.Model, tea.Cmd) {
+func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+	defaultMap := DefaultMap()
+	switch msg := msg.(type) {
+	case tea.KeyMsg:
+		switch {
+		case key.Matches(msg, defaultMap.quit):
+			return m, tea.Quit
+		}
+	}
 	return m, nil
 }
 
@@ -36,7 +47,6 @@ func (m model) View() string {
 			case 'O':
 			case 'T':
 			case 'S':
-				m.keys.quit.Keys()
 			case 'Z':
 			case 'J':
 			case 'L':
